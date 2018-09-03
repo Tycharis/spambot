@@ -32,10 +32,14 @@ public class CommandSpam implements Command {
         if (args.size() < 2) {
             Bot.sendMessage(event.getChannel(), "Invalid command. Usage: \"" +
                     Bot.getBotPrefix() +
-                    "spam <@mention: User...> <count: long>\"");
+                    "spam <@mention: User...> <count: long> [remainder: String]\"");
         }
 
         List<IUser> users = event.getMessage().getMentions();
+
+        for (int i = 0; i < users.size(); i++) {
+            args.remove(i);
+        }
 
         StringBuilder mentionsBuilder = new StringBuilder();
 
@@ -49,8 +53,16 @@ public class CommandSpam implements Command {
         long count = Long.parseLong(args.get(args.size() - 1));
         long i = 0;
 
+        StringBuilder remainderBuilder = new StringBuilder();
+
+        for (String s: args) {
+            remainderBuilder.append(s);
+        }
+
+        String message = mentions + remainderBuilder.toString();
+
         while (i < count) {
-            Bot.sendMessage(event.getChannel(), mentions);
+            Bot.sendMessage(event.getChannel(), message);
             i++;
         }
     }
